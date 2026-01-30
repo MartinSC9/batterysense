@@ -12,6 +12,7 @@ import {
   TrendingDown,
   Download,
   X,
+  XCircle,
   Clock,
   Filter,
 } from 'lucide-react';
