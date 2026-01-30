@@ -95,7 +95,6 @@ const UnifiedAuthPage = () => {
     try {
       const response = await authService.login(email, password);
       setAuthUser(response.user);
-      toast.success('¡Bienvenido de vuelta!');
       // El useEffect de isAuthenticated se encargará de redirigir
     } catch (error) {
       toast.error(error.response?.data?.error || 'Credenciales inválidas');
@@ -127,7 +126,6 @@ const UnifiedAuthPage = () => {
         role: 'cliente',
       });
       setAuthUser(response.user);
-      toast.success('¡Cuenta creada exitosamente!');
       // El useEffect de isAuthenticated se encargará de redirigir
     } catch (error) {
       toast.error(error.response?.data?.error || 'Error en el registro');
