@@ -1,8 +1,0 @@
-{
-  "buildCommand": "cd batterysense-front && npm install && npm run build",
-  "outputDirectory": "batterysense-front/dist",
-  "framework": "vite",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
-}
