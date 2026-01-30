@@ -2,19 +2,46 @@
 
 ## 1. ROLES (Prioridad Alta)
 
-**¿Qué puede hacer cada rol?**
+**¿Qué hace cada rol exactamente?**
 
-| Acción | Cliente | Técnico | Admin |
-|--------|:-------:|:-------:|:-----:|
-| Ver sus bancos | ✅ | ✅ | ✅ |
-| Ver TODOS los bancos | ❌ | **?** | ✅ |
-| Configurar umbrales | ❌ | **?** | ✅ |
-| Gestionar usuarios | ❌ | ❌ | ✅ |
-| Gestionar clientes | ❌ | ❌ | ✅ |
+| Acción | Cliente | Técnico | Admin | SuperAdmin? |
+|--------|:-------:|:-------:|:-----:|:-----------:|
+| Ver sus bancos | ✅ | ✅ | ✅ | ✅ |
+| Ver TODOS los bancos | ❌ | **?** | ✅ | ✅ |
+| Configurar umbrales | ❌ | **?** | ✅ | ✅ |
+| Gestionar usuarios | ❌ | ❌ | **?** | ✅ |
+| Gestionar clientes | ❌ | ❌ | **?** | ✅ |
 
-**Preguntas:**
-- ¿El técnico ve todos los clientes o solo los asignados?
-- ¿Los roles son jerárquicos? (Admin > Técnico > Cliente)
+**Preguntas clave:**
+
+1. **¿Quién gestiona los CLIENTES (empresas)?**
+   - ¿El Admin?
+   - ¿O debería haber un SuperAdmin de TRISO que gestione clientes?
+
+2. **¿Quién gestiona los USUARIOS?**
+   - ¿Cada cliente tiene su propio Admin que gestiona sus usuarios?
+   - ¿O hay un solo Admin (TRISO) que gestiona todos los usuarios?
+
+3. **¿El Técnico qué hace exactamente?**
+   - ¿Solo configura umbrales?
+   - ¿Ve todos los clientes o solo los asignados?
+
+4. **¿Los roles son jerárquicos?** (Admin > Técnico > Cliente)
+
+**Ejemplo de estructura posible:**
+```
+SuperAdmin (TRISO)
+  └── Gestiona CLIENTES (empresas)
+
+Admin (por cada cliente)
+  └── Gestiona USUARIOS de su empresa
+
+Técnico (TRISO)
+  └── Configura umbrales, ve todos los clientes
+
+Cliente (usuario final)
+  └── Solo visualiza sus bancos
+```
 
 ---
 
