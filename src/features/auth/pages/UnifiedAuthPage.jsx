@@ -176,14 +176,13 @@ const UnifiedAuthPage = () => {
   return (
     <div className="min-h-screen flex bg-gray-950">
       {/* Panel izquierdo - Info */}
-      <div className="hidden lg:flex lg:w-1/2 p-8 flex-col justify-center items-center relative overflow-hidden">
-        {/* Imagen de fondo */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${fondoLogin})` }}
-        />
-        {/* Overlay oscuro con difuminado */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/85 via-gray-900/80 to-blue-950/85 backdrop-blur-[2px]" />
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-900 to-blue-950 p-8 flex-col justify-center items-center relative overflow-hidden">
+        {/* Patrón de fondo */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
 
         {/* Contenido centrado */}
         <div className="relative z-10 max-w-md">
@@ -249,8 +248,16 @@ const UnifiedAuthPage = () => {
       </div>
 
       {/* Panel derecho - Formulario */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-gray-950">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex items-center justify-center p-8 relative overflow-hidden">
+        {/* Imagen de fondo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${fondoLogin})` }}
+        />
+        {/* Overlay oscuro con difuminado */}
+        <div className="absolute inset-0 bg-gray-950/90 backdrop-blur-sm" />
+
+        <div className="w-full max-w-md relative z-10">
           {/* Logo mobile */}
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
             <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
