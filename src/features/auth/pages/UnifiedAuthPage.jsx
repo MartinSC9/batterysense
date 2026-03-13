@@ -313,6 +313,32 @@ const UnifiedAuthPage = () => {
                       </>
                     )}
                   </button>
+
+                  {/* Demo accounts */}
+                  <div className="mt-6 pt-5 border-t border-gray-800">
+                    <p className="text-xs text-gray-500 text-center mb-3">Cuentas de demostración</p>
+                    <div className="space-y-2">
+                      {[
+                        { email: 'admin@batterysense.com', label: 'Admin', color: 'blue' },
+                        { email: 'tecnico@triso.com', label: 'Técnico', color: 'amber' },
+                        { email: 'cliente@enertec.com.ar', label: 'Cliente', color: 'emerald' },
+                      ].map((demo) => (
+                        <button
+                          key={demo.email}
+                          type="button"
+                          onClick={() => { setEmail(demo.email); setPassword('Admin123!'); setStep('login'); }}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-gray-800 hover:border-gray-700 hover:bg-gray-900/50 transition-colors text-left"
+                        >
+                          <span className="text-xs text-gray-400 truncate">{demo.email}</span>
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                            demo.color === 'blue' ? 'bg-blue-500/15 text-blue-400' :
+                            demo.color === 'amber' ? 'bg-amber-500/15 text-amber-400' :
+                            'bg-emerald-500/15 text-emerald-400'
+                          }`}>{demo.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </form>
               </motion.div>
             )}
