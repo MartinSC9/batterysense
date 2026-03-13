@@ -297,20 +297,20 @@ const UsuariosPage = () => {
 
   // Lista de clientes para el select
   const clientes = [
-    { id: 1, nombre: 'Empresa ABC S.A.' },
-    { id: 2, nombre: 'Telecomunicaciones XYZ' },
-    { id: 3, nombre: 'Data Center Plus' },
-    { id: 4, nombre: 'Energía Renovable SA' },
+    { id: 1, nombre: 'Enertec Soluciones S.A.' },
+    { id: 2, nombre: 'TelcoSur Comunicaciones' },
+    { id: 3, nombre: 'DataHouse Argentina' },
+    { id: 4, nombre: 'SolarCba Energía Renovable' },
   ];
 
   // Datos simulados de usuarios
   const [usuarios] = useState([
-    { id: 1, email: 'admin@batterysense.com', username: 'admin', firstName: 'Administrador', lastName: 'Sistema', role: 'admin', isActive: true, createdAt: '15/01/2026', lastLogin: '30/01/2026 14:30' },
-    { id: 2, email: 'tecnico@empresa.com', username: 'tecnico1', firstName: 'Carlos', lastName: 'Rodríguez', role: 'tecnico', isActive: true, createdAt: '18/01/2026', lastLogin: '30/01/2026 12:15' },
-    { id: 3, email: 'tecnico2@empresa.com', username: 'tecnico2', firstName: 'Laura', lastName: 'Méndez', role: 'tecnico', isActive: true, createdAt: '20/01/2026', lastLogin: '29/01/2026 18:45' },
-    { id: 4, email: 'cliente@empresa.com', username: 'cliente1', firstName: 'Juan', lastName: 'Pérez', role: 'cliente', isActive: true, createdAt: '20/01/2026', lastLogin: '30/01/2026 10:00', cliente: 'Empresa ABC S.A.' },
-    { id: 5, email: 'otro.cliente@empresa.com', username: 'cliente2', firstName: 'María', lastName: 'González', role: 'cliente', isActive: false, createdAt: '22/01/2026', lastLogin: '25/01/2026 09:30', cliente: 'Telecomunicaciones XYZ' },
-    { id: 6, email: 'soporte@datacenter.com', username: 'cliente3', firstName: 'Pedro', lastName: 'Sánchez', role: 'cliente', isActive: true, createdAt: '25/01/2026', lastLogin: '30/01/2026 11:20', cliente: 'Data Center Plus' },
+    { id: 1, email: 'admin@batterysense.com', username: 'admin', firstName: 'Sebastián', lastName: 'Arrieta', role: 'admin', isActive: true, createdAt: '15/02/2026', lastLogin: '13/03/2026 14:30' },
+    { id: 2, email: 'soporte@enertec.com.ar', username: 'tecnico1', firstName: 'Romina', lastName: 'Cáceres', role: 'tecnico', isActive: true, createdAt: '18/02/2026', lastLogin: '13/03/2026 12:15' },
+    { id: 3, email: 'tecnico@telcosur.com.ar', username: 'tecnico2', firstName: 'Matías', lastName: 'Herrera', role: 'tecnico', isActive: true, createdAt: '20/02/2026', lastLogin: '12/03/2026 18:45' },
+    { id: 4, email: 'cliente@enertec.com.ar', username: 'cliente1', firstName: 'Diego', lastName: 'Ferreyra', role: 'cliente', isActive: true, createdAt: '20/02/2026', lastLogin: '13/03/2026 10:00', cliente: 'Enertec Soluciones S.A.' },
+    { id: 5, email: 'admin@telcosur.com.ar', username: 'cliente2', firstName: 'Gabriela', lastName: 'Mansilla', role: 'cliente', isActive: false, createdAt: '22/02/2026', lastLogin: '05/03/2026 09:30', cliente: 'TelcoSur Comunicaciones' },
+    { id: 6, email: 'infra@datahouse.com.ar', username: 'cliente3', firstName: 'Nicolás', lastName: 'Bianchi', role: 'cliente', isActive: true, createdAt: '25/02/2026', lastLogin: '13/03/2026 11:20', cliente: 'DataHouse Argentina' },
   ]);
 
   const roleConfig = darkMode ? {

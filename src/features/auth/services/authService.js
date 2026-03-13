@@ -15,21 +15,21 @@ const MOCK_USERS = [
   },
   {
     id: 2,
-    email: 'tecnico@batterysense.com',
+    email: 'tecnico@triso.com',
     password: 'Admin123!',
     username: 'tecnico',
     role: 'tecnico',
-    first_name: 'Técnico',
-    last_name: 'TRISO',
+    first_name: 'Lucas',
+    last_name: 'Brunetti',
   },
   {
     id: 3,
-    email: 'cliente@empresa.com',
+    email: 'cliente@enertec.com.ar',
     password: 'Admin123!',
     username: 'cliente',
     role: 'cliente',
-    first_name: 'Juan',
-    last_name: 'Pérez',
+    first_name: 'Diego',
+    last_name: 'Ferreyra',
   },
 ];
 

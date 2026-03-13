@@ -583,7 +583,7 @@ const DashboardV4 = () => {
   const banks = [
     {
       id: 1,
-      name: 'Banco Principal', location: 'Sala de equipos - Piso 1',
+      name: 'Banco UPS Principal', location: 'Sala eléctrica - Nave 1',
       voltage: 48.5, voltageStatus: 'normal', temperature: 32, temperatureStatus: 'normal',
       current: 12.3, currentStatus: 'normal', humidity: 45, humidityStatus: 'normal', chargeLevel: 85,
       cells: [
@@ -597,7 +597,7 @@ const DashboardV4 = () => {
     },
     {
       id: 2,
-      name: 'Banco Secundario', location: 'Sala de equipos - Piso 2',
+      name: 'Banco UPS Respaldo', location: 'Sala eléctrica - Nave 2',
       voltage: 47.8, voltageStatus: 'warning', temperature: 38, temperatureStatus: 'warning',
       current: 10.5, currentStatus: 'normal', humidity: 52, humidityStatus: 'normal', chargeLevel: 72,
       cells: [
@@ -611,7 +611,7 @@ const DashboardV4 = () => {
     },
     {
       id: 3,
-      name: 'Banco Respaldo', location: 'Sala de servidores - Piso 1',
+      name: 'Banco Emergencia', location: 'Sala de servidores',
       voltage: 48.2, voltageStatus: 'normal', temperature: 28, temperatureStatus: 'normal',
       current: 8.7, currentStatus: 'normal', humidity: 48, humidityStatus: 'normal', chargeLevel: 95,
       cells: [
@@ -637,11 +637,11 @@ const DashboardV4 = () => {
   const selectedBank = banks[selectedBankIndex];
 
   const alarms = [
-    { severity: 'critical', title: 'Voltaje crítico en Celda 9', description: 'Banco Principal - 1.85V (mínimo permitido: 1.90V)', time: '5 min', timestamp: '30/01/2026 14:55' },
-    { severity: 'warning', title: 'Voltaje bajo en Celda 4', description: 'Banco Principal - 1.95V (umbral advertencia: 1.97V)', time: '1h', timestamp: '30/01/2026 14:00' },
-    { severity: 'warning', title: 'Temperatura elevada', description: 'Banco Secundario - 38°C (umbral: 35°C)', time: '2h', timestamp: '30/01/2026 13:00' },
-    { severity: 'critical', title: 'Corriente alta detectada', description: 'Banco Principal - 18.5A (máximo: 15A)', time: '3h', timestamp: '30/01/2026 12:00' },
-    { severity: 'warning', title: 'Humedad fuera de rango', description: 'Banco Secundario - 72% (máximo recomendado: 60%)', time: '5h', timestamp: '30/01/2026 10:00' },
+    { severity: 'critical', title: 'Voltaje crítico en Celda 9', description: 'Banco UPS Principal - 1.85V (mínimo permitido: 1.90V)', time: '5 min', timestamp: '13/03/2026 14:55' },
+    { severity: 'warning', title: 'Voltaje bajo en Celda 4', description: 'Banco UPS Principal - 1.95V (umbral advertencia: 1.97V)', time: '1h', timestamp: '13/03/2026 14:00' },
+    { severity: 'warning', title: 'Temperatura elevada', description: 'Banco UPS Respaldo - 38°C (umbral: 35°C)', time: '2h', timestamp: '13/03/2026 13:00' },
+    { severity: 'critical', title: 'Corriente alta detectada', description: 'Banco UPS Principal - 18.5A (máximo: 15A)', time: '3h', timestamp: '13/03/2026 12:00' },
+    { severity: 'warning', title: 'Humedad fuera de rango', description: 'Banco UPS Respaldo - 72% (máximo recomendado: 60%)', time: '5h', timestamp: '13/03/2026 10:00' },
   ];
 
   return (
