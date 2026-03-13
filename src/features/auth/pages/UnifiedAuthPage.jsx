@@ -184,55 +184,55 @@ const UnifiedAuthPage = () => {
         <div className="relative z-10 max-w-md">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-11 h-11 bg-blue-500/20 rounded-xl flex items-center justify-center">
-              <BatteryCharging className="w-6 h-6 text-blue-400" />
+            <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+              <BatteryCharging className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">BatterySense</h1>
-              <p className="text-sm text-blue-400">by TRISO</p>
+              <h1 className="text-xl font-bold text-white">BatterySense</h1>
+              <p className="text-xs text-blue-400">by TRISO</p>
             </div>
           </div>
 
           {/* Título */}
-          <div className="mt-10">
-            <h2 className="text-4xl font-bold text-white leading-tight mb-4">
+          <div className="mt-6">
+            <h2 className="text-3xl font-bold text-white leading-tight mb-3">
               Monitoreo inteligente
               <br />
               <span className="text-blue-400">para tus baterías</span>
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base">
               Plataforma de monitoreo en tiempo real para bancos de baterías.
               Optimiza el rendimiento y previene fallas antes de que ocurran.
             </p>
           </div>
 
           {/* Features */}
-          <div className="mt-10 space-y-5">
+          <div className="mt-6 space-y-3.5">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-4"
+                className="flex items-start gap-3"
               >
-                <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
+                <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 flex-shrink-0">
                   {feature.icon}
                 </div>
                 <div>
-                  <h3 className="text-white font-medium">{feature.title}</h3>
-                  <p className="text-gray-500 text-sm">{feature.description}</p>
+                  <h3 className="text-white font-medium text-sm">{feature.title}</h3>
+                  <p className="text-gray-500 text-xs">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
           </div>
 
           {/* Estadísticas */}
-          <div className="mt-12 flex gap-8">
+          <div className="mt-8 flex gap-8">
             {stats.map((stat, index) => (
               <div key={index}>
-                <div className="text-3xl font-bold text-blue-400">{stat.value}</div>
-                <div className="text-gray-500 text-sm">{stat.label}</div>
+                <div className="text-2xl font-bold text-blue-400">{stat.value}</div>
+                <div className="text-gray-500 text-xs">{stat.label}</div>
               </div>
             ))}
           </div>
