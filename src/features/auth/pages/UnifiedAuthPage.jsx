@@ -38,11 +38,7 @@ const UnifiedAuthPage = () => {
   // Redirigir si ya está autenticado, según el rol
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === 'admin') {
-        navigate('/usuarios');
-      } else {
-        navigate('/dashboard');
-      }
+      navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -319,7 +315,6 @@ const UnifiedAuthPage = () => {
                     <p className="text-xs text-gray-500 text-center mb-3">Cuentas de demostración</p>
                     <div className="space-y-2">
                       {[
-                        { email: 'admin@batterysense.com', label: 'Admin', color: 'blue' },
                         { email: 'tecnico@triso.com', label: 'Técnico', color: 'amber' },
                         { email: 'cliente@enertec.com.ar', label: 'Cliente', color: 'emerald' },
                       ].map((demo) => (
@@ -331,7 +326,6 @@ const UnifiedAuthPage = () => {
                         >
                           <span className="text-xs text-gray-400 truncate">{demo.email}</span>
                           <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                            demo.color === 'blue' ? 'bg-blue-500/15 text-blue-400' :
                             demo.color === 'amber' ? 'bg-amber-500/15 text-amber-400' :
                             'bg-emerald-500/15 text-emerald-400'
                           }`}>{demo.label}</span>

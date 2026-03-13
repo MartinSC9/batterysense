@@ -23,7 +23,6 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
     // Redirigir al dashboard correspondiente al rol del usuario
     const rolePaths = {
-      admin: '/admin/dashboard',
       tecnico: '/tecnico/dashboard',
       cliente: '/cliente/dashboard',
     };

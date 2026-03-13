@@ -5,15 +5,6 @@
 // Usuarios de prueba para el prototipo
 const MOCK_USERS = [
   {
-    id: 1,
-    email: 'admin@batterysense.com',
-    password: 'Admin123!',
-    username: 'admin',
-    role: 'admin',
-    first_name: 'Administrador',
-    last_name: 'BatterySense',
-  },
-  {
     id: 2,
     email: 'tecnico@triso.com',
     password: 'Admin123!',

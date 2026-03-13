@@ -124,7 +124,7 @@ const ConfiguracionPage = () => {
     </div>
   );
 
-  // Solo técnico y admin pueden acceder
+  // Solo técnico puede acceder
   if (user?.role === 'cliente') {
     return (
       <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-gray-950' : 'bg-gray-100'}`}>

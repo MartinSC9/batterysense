@@ -5,8 +5,6 @@ import UnifiedAuthPage from '@features/auth/pages/UnifiedAuthPage';
 import Dashboard from './pages/Dashboard';
 import DashboardV4 from './pages/DashboardV4';
 import ConfiguracionPage from './pages/ConfiguracionPage';
-import UsuariosPage from './pages/UsuariosPage';
-import ClientesPage from './pages/ClientesPage';
 
 function App() {
   const { loading } = useAuth();
@@ -44,32 +42,12 @@ function App() {
         }
       />
 
-      {/* Configuración - Técnico y Admin */}
+      {/* Configuración - Solo Técnico */}
       <Route
         path="/configuracion"
         element={
           <ProtectedRoute>
             <ConfiguracionPage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Usuarios - Solo Admin */}
-      <Route
-        path="/usuarios"
-        element={
-          <ProtectedRoute>
-            <UsuariosPage />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Clientes - Solo Admin */}
-      <Route
-        path="/clientes"
-        element={
-          <ProtectedRoute>
-            <ClientesPage />
           </ProtectedRoute>
         }
       />

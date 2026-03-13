@@ -4,8 +4,6 @@ import {
   X,
   LayoutDashboard,
   Settings,
-  Users,
-  Building2,
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
@@ -23,18 +21,6 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
     { path: '/configuracion', label: 'Configuración', description: 'Umbrales y alarmas', icon: Settings },
   ];
 
-  // Menú principal para admin (gestión)
-  const adminMainItems = [
-    { path: '/clientes', label: 'Clientes', description: 'Gestión de instalaciones', icon: Building2 },
-    { path: '/usuarios', label: 'Usuarios', description: 'Gestión de usuarios', icon: Users },
-    { path: '/configuracion', label: 'Configuración', description: 'Umbrales y alarmas', icon: Settings },
-  ];
-
-  // Dashboard de monitoreo para admin (opcional)
-  const adminMonitorItems = [
-    { path: '/dashboard-v4', label: 'Monitor General', description: 'Vista de bancos', icon: LayoutDashboard },
-  ];
-
   const handleNavigate = (path) => {
     navigate(path);
     onClose();
@@ -43,7 +29,6 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
   const roleLabels = {
     cliente: 'Cliente',
     tecnico: 'Técnico',
-    admin: 'Administrador',
   };
 
   // Estilos según modo
@@ -59,7 +44,6 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
     itemInactive: 'hover:bg-gray-800 text-gray-300',
     itemDescActive: 'text-blue-200',
     itemDescInactive: 'text-gray-500',
-    roleAdmin: 'bg-purple-500/20 text-purple-400',
     roleTecnico: 'bg-blue-500/20 text-blue-400',
     roleCliente: 'bg-gray-700 text-gray-400',
   } : {
@@ -74,13 +58,11 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
     itemInactive: 'hover:bg-gray-50 text-gray-700',
     itemDescActive: 'text-blue-500',
     itemDescInactive: 'text-gray-400',
-    roleAdmin: 'bg-purple-100 text-purple-700',
     roleTecnico: 'bg-blue-100 text-blue-700',
     roleCliente: 'bg-gray-100 text-gray-700',
   };
 
   const getRoleBadgeStyle = () => {
-    if (userRole === 'admin') return styles.roleAdmin;
     if (userRole === 'tecnico') return styles.roleTecnico;
     return styles.roleCliente;
   };
@@ -118,61 +100,7 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
 
         {/* Menu */}
         <div className="p-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
-          {/* MENÚ PARA ADMIN */}
-          {userRole === 'admin' && (
-            <>
-              {/* Gestión Principal */}
-              <p className={`text-xs font-medium ${styles.sectionTitle} uppercase tracking-wider mb-3`}>Gestión</p>
-              <div className="space-y-2 mb-6">
-                {adminMainItems.map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <button
-                      key={item.path}
-                      onClick={() => handleNavigate(item.path)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left ${
-                        isActive ? styles.itemActive : styles.itemInactive
-                      }`}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <div>
-                        <p className="font-medium text-sm">{item.label}</p>
-                        <p className={`text-xs ${isActive ? styles.itemDescActive : styles.itemDescInactive}`}>{item.description}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Monitoreo */}
-              <p className={`text-xs font-medium ${styles.sectionTitle} uppercase tracking-wider mb-3`}>Monitoreo</p>
-              <div className="space-y-2">
-                {adminMonitorItems.map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <button
-                      key={item.path}
-                      onClick={() => handleNavigate(item.path)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left ${
-                        isActive ? styles.itemActive : styles.itemInactive
-                      }`}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <div>
-                        <p className="font-medium text-sm">{item.label}</p>
-                        <p className={`text-xs ${isActive ? styles.itemDescActive : styles.itemDescInactive}`}>{item.description}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-
-          {/* MENÚ PARA CLIENTE Y TÉCNICO */}
-          {userRole !== 'admin' && (
-            <>
-              {/* Dashboards */}
+          {/* Dashboards */}
               <p className={`text-xs font-medium ${styles.sectionTitle} uppercase tracking-wider mb-3`}>Dashboards</p>
               <div className="space-y-2 mb-6">
                 {dashboardItems.map((item) => {
@@ -221,8 +149,6 @@ const Sidebar = ({ isOpen, onClose, userRole, darkMode = false }) => {
                   </div>
                 </>
               )}
-            </>
-          )}
         </div>
 
         {/* Footer */}
