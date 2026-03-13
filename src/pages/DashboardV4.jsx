@@ -1,4 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine,
+  ResponsiveContainer, Cell as RechartsCell,
+} from 'recharts';
 import { useAuth } from '@core/contexts/AuthContext';
 import {
   BatteryCharging,
@@ -130,6 +134,101 @@ const CellItem = ({ number, voltage, status, darkMode }) => {
     <div className={`bg-gradient-to-b ${colors[status]} border rounded-xl p-2 text-center hover:scale-105 transition-transform`}>
       <span className={`text-[10px] ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>C{number}</span>
       <p className="text-sm font-semibold">{voltage}V</p>
+    </div>
+  );
+};
+
+// Gráfico de voltaje de celdas
+const CellVoltageChart = ({ cells, darkMode }) => {
+  const data = useMemo(
+    () =>
+      cells.map((cell, i) => ({
+        name: `C${i + 1}`,
+        voltage: cell.voltage,
+        status: cell.status,
+      })),
+    [cells],
+  );
+
+  const getBarColor = (status) => {
+    if (status === 'critical') return '#ef4444';
+    if (status === 'warning') return '#f59e0b';
+    return '#10b981';
+  };
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (!active || !payload?.length) return null;
+    const d = payload[0].payload;
+    return (
+      <div
+        className={`px-3 py-2 rounded-lg text-xs shadow-lg border ${
+          darkMode
+            ? 'bg-gray-800 border-gray-700 text-gray-200'
+            : 'bg-white border-gray-200 text-gray-800'
+        }`}
+      >
+        <p className="font-semibold">Celda {d.name.replace('C', '')}</p>
+        <p>
+          Voltaje:{' '}
+          <span
+            style={{ color: getBarColor(d.status) }}
+            className="font-bold"
+          >
+            {d.voltage.toFixed(2)}V
+          </span>
+        </p>
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-full h-52">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+          <XAxis
+            dataKey="name"
+            tick={{ fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }}
+            axisLine={{ stroke: darkMode ? '#374151' : '#e5e7eb' }}
+            tickLine={false}
+          />
+          <YAxis
+            domain={[1.8, 2.1]}
+            ticks={[1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10]}
+            tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }}
+            axisLine={{ stroke: darkMode ? '#374151' : '#e5e7eb' }}
+            tickLine={false}
+            tickFormatter={(v) => `${v.toFixed(2)}`}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={false} />
+          <ReferenceLine
+            y={2.0}
+            stroke={darkMode ? '#10b981' : '#059669'}
+            strokeDasharray="4 4"
+            label={{
+              value: '2.00V nom',
+              position: 'right',
+              fontSize: 10,
+              fill: darkMode ? '#6ee7b7' : '#059669',
+            }}
+          />
+          <ReferenceLine
+            y={1.9}
+            stroke="#ef4444"
+            strokeDasharray="6 3"
+            label={{
+              value: '1.90V mín',
+              position: 'right',
+              fontSize: 10,
+              fill: '#ef4444',
+            }}
+          />
+          <Bar dataKey="voltage" radius={[4, 4, 0, 0]} maxBarSize={36}>
+            {data.map((entry, idx) => (
+              <RechartsCell key={idx} fill={getBarColor(entry.status)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };
@@ -525,6 +624,12 @@ const BankCard = ({ bank, darkMode }) => {
           {bank.cells.map((cell, i) => (
             <CellItem key={i} number={i + 1} voltage={cell.voltage} status={cell.status} darkMode={darkMode} />
           ))}
+        </div>
+
+        {/* Bar chart de voltaje por celda */}
+        <div className="mt-5">
+          <h4 className={`font-medium mb-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Voltaje por Celda</h4>
+          <CellVoltageChart cells={bank.cells} darkMode={darkMode} />
         </div>
       </div>
     </div>
