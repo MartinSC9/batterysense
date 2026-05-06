@@ -19,14 +19,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Si hay roles permitidos, verificar
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    // Redirigir al dashboard correspondiente al rol del usuario
-    const rolePaths = {
-      tecnico: '/tecnico/dashboard',
-      cliente: '/cliente/dashboard',
-    };
-    return <Navigate to={rolePaths[user?.role] || '/dashboard'} replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;

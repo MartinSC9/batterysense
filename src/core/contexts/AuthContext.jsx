@@ -29,9 +29,8 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Error inicializando auth:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        localStorage.removeItem('bs_token');
+        localStorage.removeItem('bs_user');
       } finally {
         setLoading(false);
       }
@@ -59,16 +58,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Actualizar usuario
-  const updateUser = (userData) => {
-    setUser((prev) => ({ ...prev, ...userData }));
-    const stored = authService.getUser();
-    if (stored) {
-      localStorage.setItem('user', JSON.stringify({ ...stored, ...userData }));
-    }
-  };
-
-  // Establecer usuario después de login/registro
   const setAuthUser = (userData) => {
     setUser(userData);
   };
@@ -79,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     login,
     logout,
-    updateUser,
     setAuthUser,
   };
 
