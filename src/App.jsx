@@ -15,7 +15,7 @@ function readDarkMode() {
     const saved = localStorage.getItem('bs_darkMode');
     if (saved !== null) return JSON.parse(saved);
   } catch {}
-  return false; // default light
+  return true; // default dark
 }
 
 function AppLayout({ children, darkMode, setDarkMode, alarms, lastDataTimestamp, getRelativeTime }) {

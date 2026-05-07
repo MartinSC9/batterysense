@@ -80,14 +80,21 @@ const Header = ({
           </span>
         </button>
 
-        {/* Center spacer + last update */}
-        <div className="flex-1 flex justify-end items-center mr-2">
+        {/* Center spacer + last update + dark mode toggle */}
+        <div className="flex-1 flex justify-end items-center gap-2 mr-2">
           {lastDataTimestamp && getRelativeTime && (
             <span className={`hidden md:flex items-center gap-1.5 text-[12px] ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
               <Clock className="w-3.5 h-3.5" />
               Datos de hace {getRelativeTime(lastDataTimestamp)}
             </span>
           )}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-white/[0.08] text-gray-400 hover:text-gray-200' : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'}`}
+            title={darkMode ? 'Modo claro' : 'Modo oscuro'}
+          >
+            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Notification bell — mobile only */}
@@ -182,13 +189,6 @@ const Header = ({
                 </div>
               </div>
               <div className="py-0.5">
-                <button
-                  onClick={() => { setDarkMode(!darkMode); setMenuOpen(false); }}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] transition-colors ${darkMode ? 'text-gray-300 hover:bg-white/[0.06]' : 'text-gray-600 hover:bg-gray-50'}`}
-                >
-                  {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-gray-400" />}
-                  {darkMode ? 'Modo claro' : 'Modo oscuro'}
-                </button>
                 <button
                   onClick={() => { logout(); setMenuOpen(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] transition-colors ${darkMode ? 'text-red-400 hover:bg-red-500/10' : 'text-red-500 hover:bg-red-50'}`}
