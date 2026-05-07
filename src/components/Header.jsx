@@ -166,26 +166,34 @@ const Header = ({
 
           {menuOpen && (
             <div
-              className="absolute right-0 mt-1.5 w-56 rounded-lg border shadow-lg overflow-hidden"
-              style={{ backgroundColor: darkMode ? '#111827' : '#ffffff', borderColor: darkMode ? 'rgba(255,255,255,0.12)' : '#e5e7eb', boxShadow: darkMode ? '0 8px 24px rgba(0,0,0,0.5)' : '0 8px 24px rgba(0,0,0,0.12)' }}
+              className="absolute right-0 mt-1.5 w-52 rounded-lg border overflow-hidden"
+              style={{ backgroundColor: darkMode ? '#111827' : '#ffffff', borderColor: darkMode ? 'rgba(255,255,255,0.10)' : '#e5e7eb', boxShadow: darkMode ? '0 8px 24px rgba(0,0,0,0.5)' : '0 8px 24px rgba(0,0,0,0.12)' }}
             >
-              <div className={`px-4 py-3 border-b ${darkMode ? 'border-white/[0.10]' : 'border-gray-100'}`}>
-                <p className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>{user?.name || 'Usuario'}</p>
-                <p className={`text-[11px] mt-0.5 text-gray-400`}>{user?.email}</p>
+              <div className={`flex items-center gap-2.5 px-3 py-2.5 border-b ${darkMode ? 'border-white/[0.08]' : 'border-gray-100'}`}>
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold shrink-0"
+                  style={{ backgroundColor: darkMode ? 'rgba(59,130,246,0.25)' : '#eff6ff', color: darkMode ? '#93c5fd' : '#2563eb' }}
+                >
+                  {initials}
+                </div>
+                <div className="min-w-0">
+                  <p className={`text-[12px] font-medium truncate ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{user?.name || 'Usuario'}</p>
+                  <p className={`text-[10px] truncate ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{user?.email}</p>
+                </div>
               </div>
-              <div className="py-1">
+              <div className="py-0.5">
                 <button
                   onClick={() => { setDarkMode(!darkMode); setMenuOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-[13px] transition-colors ${darkMode ? 'text-gray-300 hover:bg-white/[0.06]' : 'text-gray-700 hover:bg-gray-50'}`}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] transition-colors ${darkMode ? 'text-gray-300 hover:bg-white/[0.06]' : 'text-gray-600 hover:bg-gray-50'}`}
                 >
-                  {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-gray-400" />}
+                  {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-gray-400" />}
                   {darkMode ? 'Modo claro' : 'Modo oscuro'}
                 </button>
                 <button
                   onClick={() => { logout(); setMenuOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 text-[13px] transition-colors ${darkMode ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-50'}`}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] transition-colors ${darkMode ? 'text-red-400 hover:bg-red-500/10' : 'text-red-500 hover:bg-red-50'}`}
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
                   Cerrar sesión
                 </button>
               </div>
