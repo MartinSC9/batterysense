@@ -239,14 +239,12 @@ const UnifiedAuthPage = () => {
                   </button>
 
                   <div className="mt-6 pt-5 border-t border-gray-800">
-                    <p className="text-xs text-gray-500 text-center mb-3">Cuenta demo</p>
                     <button
                       type="button"
-                      onClick={() => { setEmail('rjuarez@telecom-cba.com.ar'); setPassword('Admin123!'); setStep('login'); }}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-gray-800 hover:border-gray-700 hover:bg-gray-900/50 transition-colors text-left"
+                      onClick={() => { setEmail('demo@batterysense.com'); setPassword('Admin123!'); setStep('login'); }}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-800 hover:border-gray-700 hover:bg-gray-900/50 transition-colors text-center text-xs text-gray-400"
                     >
-                      <span className="text-xs text-gray-400">rjuarez@telecom-cba.com.ar</span>
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">Demo</span>
+                      Probar con cuenta de prueba
                     </button>
                   </div>
                 </form>
