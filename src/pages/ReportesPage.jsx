@@ -293,11 +293,12 @@ export default function ReportesPage({ darkMode }) {
               <button
                 key={p.key}
                 onClick={() => setPeriod(p.key)}
+                disabled={historyLoading}
                 className={`px-2.5 py-1 text-[12px] font-medium transition-colors ${
                   period === p.key
                     ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                     : (darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-700')
-                }`}
+                } ${historyLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 style={{
                   borderRadius: i === 0 ? '5px 0 0 5px' : i === PERIOD_OPTIONS.length - 1 ? '0 5px 5px 0' : 0,
                   ...(i > 0 ? { borderLeft: `1px solid ${border}` } : {}),
