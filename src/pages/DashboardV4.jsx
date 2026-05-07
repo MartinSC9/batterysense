@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
@@ -356,6 +357,7 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
 
 
 const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestamp: setParentTimestamp, getRelativeTime }) => {
+  const navigate = useNavigate();
   const [selectedBankIndex, setSelectedBankIndex] = useState(0);
   const [banks, setBanks] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
@@ -534,7 +536,10 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
                 <div>
                   <div className="flex items-center gap-2.5">
                     <h2 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{selectedBank.name}</h2>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium text-white ${sc.color}`}>{sc.text}</span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium text-white ${sc.color} ${status === 'warning' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                      onClick={status === 'warning' ? () => navigate('/alertas') : undefined}
+                    >{sc.text}</span>
                   </div>
                   {selectedBank.location && (
                     <p className={`text-xs mt-0.5 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{selectedBank.location}</p>
@@ -548,9 +553,13 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
                   { label: 'Voltaje actual', value: selectedBank.voltage, unit: 'V', icon: Zap, trend: vAvg != null ? selectedBank.voltage - vAvg : undefined },
                   { label: 'Corriente actual', value: selectedBank.current, unit: 'A', icon: Activity, trend: iAvg != null ? selectedBank.current - iAvg : undefined },
                   { label: 'Celdas operativas', value: `${selectedBank.chargeLevel}%`, unit: '', icon: BatteryCharging },
-                  { label: 'Alertas activas', value: selectedBank.alarmCount, unit: '', icon: AlertTriangle },
+                  { label: 'Alertas activas', value: selectedBank.alarmCount, unit: '', icon: AlertTriangle, link: selectedBank.alarmCount > 0 ? '/alertas' : null },
                 ].map(m => (
-                  <div key={m.label} className={`rounded-xl border p-4 ${darkMode ? 'bg-gray-800/50 border-gray-700/50' : 'bg-white border-gray-200'}`}>
+                  <div
+                    key={m.label}
+                    className={`rounded-xl border p-4 ${darkMode ? 'bg-gray-800/50 border-gray-700/50' : 'bg-white border-gray-200'} ${m.link ? 'cursor-pointer hover:border-blue-500/50 transition-colors' : ''}`}
+                    onClick={m.link ? () => navigate(m.link) : undefined}
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{m.label}</span>
                       <m.icon className={`w-4 h-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />

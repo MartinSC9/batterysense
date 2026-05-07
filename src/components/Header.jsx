@@ -97,7 +97,7 @@ const Header = ({
               if (hasAlarms) {
                 setBellOpen(v => !v);
               } else {
-                navigate('/alarmas');
+                navigate('/alertas');
               }
             }}
             className={`relative p-2 rounded-lg transition-colors ${
@@ -139,7 +139,7 @@ const Header = ({
               </div>
               <div className={`border-t ${darkMode ? 'border-white/[0.10]' : 'border-gray-100'}`}>
                 <button
-                  onClick={() => { navigate('/alarmas'); setBellOpen(false); }}
+                  onClick={() => { navigate('/alertas'); setBellOpen(false); }}
                   className={`w-full px-4 py-2.5 text-[13px] font-medium text-center transition-colors ${darkMode ? 'text-blue-400 hover:bg-white/[0.06]' : 'text-blue-600 hover:bg-gray-50'}`}
                 >
                   Ver todas las alertas

@@ -3,7 +3,7 @@ import { LayoutDashboard, Bell, FileText, Monitor, X, ExternalLink } from 'lucid
 
 const menuItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/alarmas', label: 'Alertas', icon: Bell, showBadge: true },
+  { to: '/alertas', label: 'Alertas', icon: Bell, showBadge: true },
   { to: '/reportes', label: 'Reportes', icon: FileText },
   { to: '/kiosco', label: 'Modo Kiosco', icon: Monitor },
 ];

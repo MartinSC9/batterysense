@@ -119,7 +119,7 @@ export default function App() {
         </AppLayout></ProtectedRoute>
       } />
 
-      <Route path="/alarmas" element={
+      <Route path="/alertas" element={
         <ProtectedRoute><AppLayout {...layoutProps}>
           <AlarmasPage darkMode={darkMode} />
         </AppLayout></ProtectedRoute>
@@ -137,6 +137,7 @@ export default function App() {
         </ProtectedRoute>
       } />
 
+      <Route path="/alarmas" element={<Navigate to="/alertas" replace />} />
       <Route path="/dashboard-v4" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
