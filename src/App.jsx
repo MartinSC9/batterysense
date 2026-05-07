@@ -50,7 +50,16 @@ function AppLayout({ children, darkMode, setDarkMode, alarms, lastDataTimestamp,
           onClose={() => setSidebarOpen(false)}
           alarmCount={alarms.length}
         />
-        <main ref={mainRef} className="flex-1 min-w-0 overflow-y-auto relative">
+        <main
+          ref={mainRef}
+          className="flex-1 min-w-0 overflow-y-auto relative"
+          style={{
+            backgroundImage: darkMode
+              ? 'radial-gradient(circle, rgba(59,130,246,0.04) 1px, transparent 1px)'
+              : 'radial-gradient(circle, rgba(59,130,246,0.06) 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+          }}
+        >
           <div className="max-w-6xl mx-auto relative">
             {children}
           </div>
