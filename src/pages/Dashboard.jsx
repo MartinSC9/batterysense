@@ -175,7 +175,7 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
   useEffect(() => {
     if (!varLabel) return;
     setLoading(true);
-    api.get(`/devices/mine/variables/${varLabel}/stats`, { params: { period } })
+    api.get(`/devices/mine/variables/${varLabel}/stats`, { params: { period, tz: new Date().getTimezoneOffset() } })
       .then(({ data: res }) => {
         if (!res.count) { setData(null); return; }
 
@@ -318,7 +318,7 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
             </defs>
             <CartesianGrid stroke={gridColor} strokeDasharray="3 3" />
             <XAxis dataKey="label" tick={{ fontSize: 10, fill: axisColor }} interval={0} angle={-20} textAnchor="end" height={40} />
-            <YAxis tick={{ fontSize: 10, fill: axisColor }} domain={['auto', 'auto']} width={40} />
+            <YAxis tick={{ fontSize: 10, fill: axisColor }} domain={[dataMin => Math.floor((dataMin - 0.5) * 10) / 10, dataMax => Math.ceil((dataMax + 0.5) * 10) / 10]} width={40} />
             <Tooltip content={<DailyTooltip />} />
             <Area type="monotone" dataKey="avg" name={`Prom ${unit}`} stroke={color} fill={`url(#grad-${bankId}-${title}-daily)`} strokeWidth={2} dot={{ r: 3, fill: color, strokeWidth: 0 }} />
           </AreaChart>

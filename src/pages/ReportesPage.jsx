@@ -199,8 +199,8 @@ export default function ReportesPage({ darkMode }) {
     for (const bank of activeBanks) {
       try {
         const [vRes, iRes] = await Promise.all([
-          api.get(`/devices/mine/variables/banco${bank.id}_v/stats`, { params: { period: periodKey } }),
-          api.get(`/devices/mine/variables/banco${bank.id}_i/stats`, { params: { period: periodKey } }),
+          api.get(`/devices/mine/variables/banco${bank.id}_v/stats`, { params: { period: periodKey, tz: new Date().getTimezoneOffset() } }),
+          api.get(`/devices/mine/variables/banco${bank.id}_i/stats`, { params: { period: periodKey, tz: new Date().getTimezoneOffset() } }),
         ]);
 
         newHistory[bank.id] = {
