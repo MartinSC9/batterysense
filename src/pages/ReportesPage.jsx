@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@core/contexts/AuthContext';
 import api from '@core/config/api';
-import { Download, CheckCircle } from 'lucide-react';
+import { Download, CheckCircle, ChevronDown } from 'lucide-react';
 
 const STATUS_LABELS = {
   normal: 'OK',
@@ -16,10 +16,79 @@ const STATUS_DOTS = {
 };
 
 const PERIOD_OPTIONS = [
-  { key: 'today', label: 'Hoy', ms: 86400000 },
-  { key: 'week', label: '7d', ms: 604800000 },
-  { key: 'month', label: '30d', ms: 2592000000 },
+  { key: 'today', label: 'Hoy' },
+  { key: 'week', label: '7d' },
+  { key: 'month', label: '30d' },
 ];
+
+function ReadingsTable({ bank, rows, fmt, darkMode, border, cardBg, theadBg, thCls, tdCls }) {
+  const [open, setOpen] = useState(false);
+  const MAX_PREVIEW = 10;
+  const displayed = open ? rows : rows.slice(0, MAX_PREVIEW);
+  const hasMore = rows.length > MAX_PREVIEW;
+
+  return (
+    <div style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }} className="overflow-hidden">
+      <div
+        className={`flex items-center justify-between px-3 py-2.5 text-[13px] font-semibold ${
+          darkMode ? 'text-gray-200' : 'text-gray-700'
+        }`}
+        style={{ borderBottom: `1px solid ${border}`, borderLeft: `3px solid ${darkMode ? '#06b6d4' : '#0891b2'}` }}
+      >
+        <span>Lecturas — {bank.name}</span>
+        <span className={`text-[11px] font-normal tabular-nums ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+          {rows.length} lecturas
+        </span>
+      </div>
+
+      {rows.length === 0 ? (
+        <div className={`px-3 py-8 text-center text-[13px] ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+          Sin lecturas para hoy
+        </div>
+      ) : (
+        <>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className={darkMode ? 'text-gray-400' : 'text-gray-500'} style={{ borderBottom: `1px solid ${border}`, backgroundColor: theadBg }}>
+                  <th className={thCls}>Hora</th>
+                  <th className={`${thCls} text-right ${darkMode ? 'text-blue-400/80' : 'text-blue-600/70'}`}>V</th>
+                  <th className={`${thCls} text-right ${darkMode ? 'text-emerald-400/80' : 'text-emerald-600/70'}`}>A</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayed.map((row, i) => (
+                  <tr key={row.key} style={i > 0 ? { borderTop: `1px solid ${border}` } : undefined}>
+                    <td className={`${tdCls} font-mono tabular-nums ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{row.label}</td>
+                    <td className={`${tdCls} text-right font-mono tabular-nums ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                      {row.voltage != null ? fmt(row.voltage) : '—'}
+                    </td>
+                    <td className={`${tdCls} text-right font-mono tabular-nums ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                      {row.current != null ? fmt(row.current) : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {hasMore && (
+            <button
+              onClick={() => setOpen(v => !v)}
+              className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 text-[12px] font-medium transition-colors ${
+                darkMode ? 'text-blue-400 hover:bg-white/[0.04]' : 'text-blue-600 hover:bg-gray-50'
+              }`}
+              style={{ borderTop: `1px solid ${border}` }}
+            >
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? 'rotate-180' : ''}`} />
+              {open ? 'Ver menos' : `Ver todas (${rows.length})`}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function ReportesPage({ darkMode }) {
   const { user } = useAuth();
@@ -119,37 +188,24 @@ export default function ReportesPage({ darkMode }) {
     }
   }, []);
 
+  const periodKey = period === 'today' ? 'today' : period === 'week' ? 'week' : 'month';
+
   const fetchHistory = useCallback(async () => {
     if (banks.length === 0) return;
     setHistoryLoading(true);
     const activeBanks = banks.filter(b => !b.inactive);
-    const periodMs = PERIOD_OPTIONS.find(p => p.key === period)?.ms || 86400000;
-    const now = Date.now();
-    const start = now - periodMs;
 
     const newHistory = {};
     for (const bank of activeBanks) {
       try {
         const [vRes, iRes] = await Promise.all([
-          api.get(`/devices/mine/variables/banco${bank.id}_v/values?start=${start}&end=${now}&limit=500`),
-          api.get(`/devices/mine/variables/banco${bank.id}_i/values?start=${start}&end=${now}&limit=500`),
+          api.get(`/devices/mine/variables/banco${bank.id}_v/stats`, { params: { period: periodKey } }),
+          api.get(`/devices/mine/variables/banco${bank.id}_i/stats`, { params: { period: periodKey } }),
         ]);
-        const vValues = vRes.data.values || [];
-        const iValues = iRes.data.values || [];
 
         newHistory[bank.id] = {
-          voltage: {
-            count: vValues.length,
-            min: vValues.length ? Math.min(...vValues.map(v => v.value)) : null,
-            max: vValues.length ? Math.max(...vValues.map(v => v.value)) : null,
-            avg: vValues.length ? (vValues.reduce((s, v) => s + v.value, 0) / vValues.length) : null,
-          },
-          current: {
-            count: iValues.length,
-            min: iValues.length ? Math.min(...iValues.map(v => v.value)) : null,
-            max: iValues.length ? Math.max(...iValues.map(v => v.value)) : null,
-            avg: iValues.length ? (iValues.reduce((s, v) => s + v.value, 0) / iValues.length) : null,
-          },
+          voltage: { count: vRes.data.count, min: vRes.data.min, max: vRes.data.max, avg: vRes.data.avg, points: vRes.data.points || [] },
+          current: { count: iRes.data.count, min: iRes.data.min, max: iRes.data.max, avg: iRes.data.avg, points: iRes.data.points || [] },
         };
       } catch {
         newHistory[bank.id] = null;
@@ -157,7 +213,7 @@ export default function ReportesPage({ darkMode }) {
     }
     setHistory(newHistory);
     setHistoryLoading(false);
-  }, [banks, period]);
+  }, [banks, periodKey]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
   useEffect(() => { fetchHistory(); }, [fetchHistory]);
@@ -200,7 +256,7 @@ export default function ReportesPage({ darkMode }) {
     if (alarms.length > 0) {
       csv += `Título${sep}Banco${sep}Celda${sep}Valor${sep}Última actividad\n`;
       alarms.forEach(a => {
-        csv += `${a.title}${sep}Banco ${a.banco}${sep}${a.celda || '—'}${sep}${a.value}${sep}${a.timestamp}\n`;
+        csv += `${a.title}${sep}Banco ${a.banco}${sep}${a.celda || '—'}${sep}${fmt(a.value)}${sep}${a.timestamp}\n`;
       });
     } else {
       csv += `Sin alertas activas\n`;
@@ -232,14 +288,14 @@ export default function ReportesPage({ darkMode }) {
             Reportes
           </h1>
           {/* Period toggle — inline */}
-          <div className="flex items-center" style={{ borderRadius: 6, border: `1px solid ${border}` }}>
+          <div className="flex items-center" style={{ borderRadius: 6, border: `1px solid ${border}`, backgroundColor: cardBg }}>
             {PERIOD_OPTIONS.map((p, i) => (
               <button
                 key={p.key}
                 onClick={() => setPeriod(p.key)}
                 className={`px-2.5 py-1 text-[12px] font-medium transition-colors ${
                   period === p.key
-                    ? (darkMode ? 'bg-white/[0.08] text-gray-200' : 'bg-gray-100 text-gray-900')
+                    ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                     : (darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-700')
                 }`}
                 style={{
@@ -528,7 +584,7 @@ export default function ReportesPage({ darkMode }) {
                           <td className={`${tdCls} font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{a.title}</td>
                           <td className={`${tdCls} font-mono tabular-nums ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>B{a.banco}</td>
                           <td className={`${tdCls} font-mono tabular-nums ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{a.celda ? `C${a.celda}` : '—'}</td>
-                          <td className={`${tdCls} text-right font-mono tabular-nums ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{a.value}</td>
+                          <td className={`${tdCls} text-right font-mono tabular-nums ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{fmt(a.value)}</td>
                           <td className={`${tdCls} text-right font-mono tabular-nums text-[12px] ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>{a.timestamp}</td>
                         </tr>
                       ))}
@@ -548,7 +604,7 @@ export default function ReportesPage({ darkMode }) {
                       <div className={`flex items-center gap-2 mt-0.5 text-[11px] font-mono tabular-nums ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                         <span>B{a.banco}</span>
                         {a.celda && <span>C{a.celda}</span>}
-                        <span>val {a.value}</span>
+                        <span>val {fmt(a.value)}</span>
                         <span>{a.timestamp}</span>
                       </div>
                     </div>
@@ -562,6 +618,37 @@ export default function ReportesPage({ darkMode }) {
               </div>
             )}
           </div>
+
+          {/* Historial de lecturas — solo para "Hoy" */}
+          {periodKey === 'today' && activeBanksWithHistory.map(bank => {
+            const h = history[bank.id];
+            const vMap = {};
+            h.voltage.points.forEach(p => { vMap[p.timestamp] = p.value; });
+            const iMap = {};
+            h.current.points.forEach(p => { iMap[p.timestamp] = p.value; });
+            const allTs = [...new Set([...h.voltage.points.map(p => p.timestamp), ...h.current.points.map(p => p.timestamp)])].sort((a, b) => b - a);
+            const rows = allTs.map(ts => ({
+              key: ts,
+              label: new Date(ts).toLocaleString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+              voltage: vMap[ts] ?? null,
+              current: iMap[ts] ?? null,
+            }));
+
+            return (
+              <ReadingsTable
+                key={bank.id}
+                bank={bank}
+                rows={rows}
+                fmt={fmt}
+                darkMode={darkMode}
+                border={border}
+                cardBg={cardBg}
+                theadBg={theadBg}
+                thCls={thCls}
+                tdCls={tdCls}
+              />
+            );
+          })}
         </div>
       )}
     </div>

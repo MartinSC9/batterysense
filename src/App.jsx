@@ -5,7 +5,7 @@ import ProtectedRoute from '@core/routes/ProtectedRoute';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import UnifiedAuthPage from '@features/auth/pages/UnifiedAuthPage';
-import Dashboard from './pages/DashboardV4';
+import Dashboard from './pages/Dashboard';
 import AlarmasPage from './pages/AlarmasPage';
 import ReportesPage from './pages/ReportesPage';
 import KioskoPage from './pages/KioskoPage';

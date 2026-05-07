@@ -119,12 +119,12 @@ export default function AlarmasPage({ darkMode }) {
         <div className="flex items-center gap-2 shrink-0">
           {/* Filtro por banco — compacto */}
           {bankSet.length > 1 && (
-            <div className="hidden sm:flex items-center" style={{ borderRadius: 6, border: `1px solid ${border}` }}>
+            <div className="hidden sm:flex items-center" style={{ borderRadius: 6, border: `1px solid ${border}`, backgroundColor: cardBg }}>
               <button
                 onClick={() => setFilter('all')}
                 className={`px-2.5 py-1 text-[12px] font-medium transition-colors ${
                   filter === 'all'
-                    ? (darkMode ? 'bg-white/[0.08] text-gray-200' : 'bg-gray-100 text-gray-900')
+                    ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                     : (darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-700')
                 }`}
                 style={{ borderRadius: '5px 0 0 5px' }}
@@ -137,7 +137,7 @@ export default function AlarmasPage({ darkMode }) {
                   onClick={() => setFilter(b)}
                   className={`px-2.5 py-1 text-[12px] font-medium transition-colors ${
                     filter === b
-                      ? (darkMode ? 'bg-white/[0.08] text-gray-200' : 'bg-gray-100 text-gray-900')
+                      ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                       : (darkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-700')
                   }`}
                   style={{ borderLeft: `1px solid ${border}` }}
@@ -167,7 +167,7 @@ export default function AlarmasPage({ darkMode }) {
             onClick={() => setFilter('all')}
             className={`shrink-0 px-3 py-1.5 text-[12px] font-medium rounded-md transition-colors ${
               filter === 'all'
-                ? (darkMode ? 'bg-white/[0.08] text-gray-200' : 'bg-gray-100 text-gray-900')
+                ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                 : (darkMode ? 'text-gray-500' : 'text-gray-400')
             }`}
             style={{ border: `1px solid ${border}` }}
@@ -182,7 +182,7 @@ export default function AlarmasPage({ darkMode }) {
                 onClick={() => setFilter(b)}
                 className={`shrink-0 px-3 py-1.5 text-[12px] font-medium rounded-md transition-colors ${
                   filter === b
-                    ? (darkMode ? 'bg-white/[0.08] text-gray-200' : 'bg-gray-100 text-gray-900')
+                    ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                     : (darkMode ? 'text-gray-500' : 'text-gray-400')
                 }`}
                 style={{ border: `1px solid ${border}` }}

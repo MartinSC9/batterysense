@@ -13,6 +13,9 @@ export default function KioskoPage({ darkMode }) {
   const navigate = useNavigate();
   const [banks, setBanks] = useState([]);
   const [alarmCount, setAlarmCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(null);
   const [time, setTime] = useState(new Date());
 
   const extractValue = (raw) => {
@@ -33,7 +36,8 @@ export default function KioskoPage({ darkMode }) {
 
   const INACTIVE_THRESHOLD = 24 * 60 * 60 * 1000;
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
     try {
       const { data: variables } = await api.get('/devices/mine/variables');
       const varMap = {};
@@ -77,6 +81,10 @@ export default function KioskoPage({ darkMode }) {
       setAlarmCount(totalAlarms);
     } catch (err) {
       console.error('Error:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+      setLastUpdate(new Date());
     }
   }, []);
 
@@ -87,7 +95,7 @@ export default function KioskoPage({ darkMode }) {
 
   useEffect(() => {
     fetchData();
-    const t = setInterval(fetchData, 300000);
+    const t = setInterval(() => fetchData(true), 300000);
     return () => clearInterval(t);
   }, [fetchData]);
 
@@ -134,8 +142,18 @@ export default function KioskoPage({ darkMode }) {
           </div>
         </div>
 
-        {/* Right — clock + exit */}
+        {/* Right — refresh status + clock + exit */}
         <div className="flex items-center gap-4">
+          <div className={`hidden sm:flex items-center gap-1.5 text-[11px] ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>
+            {refreshing ? (
+              <><div className="animate-spin rounded-full h-3 w-3 border-t border-b border-blue-500" /> Actualizando...</>
+            ) : lastUpdate ? (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+                Actualización automática cada 5 min
+              </>
+            ) : null}
+          </div>
           <div className={`text-right font-mono tabular-nums ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             <span className="text-lg sm:text-xl font-bold tracking-wider">
               {time.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
@@ -158,6 +176,12 @@ export default function KioskoPage({ darkMode }) {
 
       {/* Banks grid */}
       <div className="flex-1 p-3 sm:p-4 lg:p-5">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-full">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 mb-3" />
+            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>Cargando datos...</p>
+          </div>
+        ) : (
         <div className="grid gap-3 sm:gap-4 h-full" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
           {banks.map(bank => {
             const sc = STATUS_ACCENT[bank.status];
@@ -220,6 +244,7 @@ export default function KioskoPage({ darkMode }) {
             );
           })}
         </div>
+        )}
       </div>
 
       {/* Bottom status strip — only if alarms */}

@@ -156,15 +156,16 @@ const BankSelector = ({ banks, selectedIndex, onChange, darkMode }) => {
 };
 
 const PERIODS = [
-  { key: 'today', label: 'Hoy', ms: 86400000 },
-  { key: 'week', label: '7 días', ms: 604800000 },
-  { key: 'month', label: '30 días', ms: 2592000000 },
+  { key: 'hour', label: '1h' },
+  { key: 'today', label: 'Hoy' },
+  { key: 'week', label: '7d' },
+  { key: 'month', label: '30d' },
 ];
 
 const fmt = (v) => typeof v === 'number' ? v.toFixed(1) : '-';
 
 const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) => {
-  const [period, setPeriod] = useState('today');
+  const [period, setPeriod] = useState('hour');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -174,64 +175,36 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
   useEffect(() => {
     if (!varLabel) return;
     setLoading(true);
-    const now = Date.now();
-    const ms = PERIODS.find(p => p.key === period)?.ms || 86400000;
-    api.get(`/devices/mine/variables/${varLabel}/values`, { params: { start: now - ms, end: now, limit: 500 } })
+    api.get(`/devices/mine/variables/${varLabel}/stats`, { params: { period } })
       .then(({ data: res }) => {
-        const vals = (res.values || []).sort((a, b) => a.timestamp - b.timestamp);
-        if (!vals.length) { setData(null); return; }
+        if (!res.count) { setData(null); return; }
 
-        if (period === 'today') {
-          // Lecturas individuales — cada punto es una lectura real
+        if (period === 'today' || period === 'hour') {
           setData({
             mode: 'raw',
-            points: vals.map(v => ({
-              label: new Date(v.timestamp).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }),
-              value: Number(v.value.toFixed(1)),
+            points: res.points.map(p => ({
+              label: new Date(p.timestamp).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }),
+              value: p.value,
             })),
-            min: Math.min(...vals.map(v => v.value)),
-            max: Math.max(...vals.map(v => v.value)),
-            avg: vals.reduce((s, v) => s + v.value, 0) / vals.length,
-            count: vals.length,
+            min: res.min,
+            max: res.max,
+            avg: res.avg,
+            count: res.count,
           });
         } else {
-          // Agregar por día — promedio, mín, máx por cada día
-          const dayBuckets = {};
-          const days = period === 'week' ? 7 : 30;
-          for (let d = days - 1; d >= 0; d--) {
-            const date = new Date(now - d * 86400000);
-            const key = date.toISOString().slice(0, 10); // YYYY-MM-DD para ordenar
-            dayBuckets[key] = { values: [], date };
-          }
-          vals.forEach(v => {
-            const key = new Date(v.timestamp).toISOString().slice(0, 10);
-            if (dayBuckets[key]) dayBuckets[key].values.push(v.value);
-          });
-
-          const points = Object.entries(dayBuckets)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .filter(([, b]) => b.values.length > 0)
-            .map(([, bucket]) => {
-              const avg = bucket.values.reduce((s, v) => s + v, 0) / bucket.values.length;
-              const min = Math.min(...bucket.values);
-              const max = Math.max(...bucket.values);
-              return {
-                label: bucket.date.toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' }),
-                avg: Number(avg.toFixed(1)),
-                min: Number(min.toFixed(1)),
-                max: Number(max.toFixed(1)),
-                readings: bucket.values.length,
-              };
-            });
-
-          const allVals = vals.map(v => v.value);
           setData({
             mode: 'daily',
-            points,
-            min: Math.min(...allVals),
-            max: Math.max(...allVals),
-            avg: allVals.reduce((s, v) => s + v, 0) / allVals.length,
-            count: allVals.length,
+            points: res.points.map(p => ({
+              label: new Date(p.date + 'T12:00:00').toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' }),
+              avg: p.avg,
+              min: p.min,
+              max: p.max,
+              readings: p.readings,
+            })),
+            min: res.min,
+            max: res.max,
+            avg: res.avg,
+            count: res.count,
           });
         }
       })
@@ -272,7 +245,7 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
     );
   };
 
-  const periodLabel = period === 'today' ? 'Lecturas individuales' : 'Promedio diario';
+  const periodLabel = (period === 'today' || period === 'hour') ? 'Lecturas individuales' : 'Promedio diario';
 
   return (
     <div className={`rounded-xl border p-4 ${darkMode ? 'bg-gray-800/50 border-gray-700/50' : 'bg-white border-gray-200'}`}>
@@ -356,7 +329,7 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) 
 };
 
 
-const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestamp: setParentTimestamp, getRelativeTime }) => {
+const Dashboard = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestamp: setParentTimestamp, getRelativeTime }) => {
   const navigate = useNavigate();
   const [selectedBankIndex, setSelectedBankIndex] = useState(0);
   const [banks, setBanks] = useState([]);
@@ -595,4 +568,4 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
   );
 };
 
-export default DashboardV4;
+export default Dashboard;
