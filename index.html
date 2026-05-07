@@ -24,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>BatterySense - Monitoreo de Baterías</title>
   </head>
-  <body style="margin:0;background:#030712">
+  <body style="margin:0">
     <div id="root">
       <div id="app-loader" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:20px">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
@@ -40,7 +40,12 @@
         </div>
       </div>
     </div>
-    <style>@keyframes loader{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}</style>
+    <style>@keyframes loader{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}#app-loader.seen{display:none!important}</style>
+    <script>
+      var dk=localStorage.getItem('bs_darkMode')!=='false';
+      document.body.style.background=dk?'#030712':'#f9fafb';
+      if(sessionStorage.getItem('bs_loaded')){document.getElementById('app-loader').classList.add('seen')}else{sessionStorage.setItem('bs_loaded','1')}
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
