@@ -238,15 +238,6 @@ const UnifiedAuthPage = () => {
                     )}
                   </button>
 
-                  <div className="mt-6 pt-5 border-t border-gray-800">
-                    <button
-                      type="button"
-                      onClick={() => { setEmail('demo@batterysense.com'); setPassword('Admin123!'); setStep('login'); }}
-                      className="w-full px-3 py-2.5 rounded-lg border border-gray-800 hover:border-gray-700 hover:bg-gray-900/50 transition-colors text-center text-xs text-gray-400"
-                    >
-                      Probar con cuenta de prueba
-                    </button>
-                  </div>
                 </form>
               </motion.div>
             )}
