@@ -162,7 +162,7 @@ const PERIODS = [
 
 const fmt = (v) => typeof v === 'number' ? v.toFixed(1) : '-';
 
-const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode }) => {
+const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode, onAvg }) => {
   const [period, setPeriod] = useState('today');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -237,6 +237,11 @@ const SimpleChart = ({ bankId, varLabel, title, unit, color, darkMode }) => {
       .catch(() => setData(null))
       .finally(() => setLoading(false));
   }, [varLabel, period]);
+
+  // Reportar promedio al parent cuando data cambia
+  useEffect(() => {
+    if (data?.avg != null && onAvg) onAvg(data.avg);
+  }, [data?.avg, onAvg]);
 
   // Tooltip para lecturas individuales (Hoy)
   const RawTooltip = ({ active, payload, label }) => {
@@ -478,30 +483,11 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
 
   const selectedBank = banks[selectedBankIndex] || null;
 
-  // Fetch promedios del banco seleccionado para trend
-  const [avgStats, setAvgStats] = useState(null);
-  const selectedBankId = selectedBank?.id;
-  const selectedBankInactive = selectedBank?.inactive;
-  useEffect(() => {
-    setAvgStats(null);
-    if (!selectedBankId || selectedBankInactive) return;
-    let cancelled = false;
-    const now = Date.now();
-    const start = now - 86400000;
-    Promise.all([
-      api.get(`/devices/mine/variables/banco${selectedBankId}_v/values`, { params: { start, end: now, limit: 500 } }),
-      api.get(`/devices/mine/variables/banco${selectedBankId}_i/values`, { params: { start, end: now, limit: 500 } }),
-    ]).then(([vRes, iRes]) => {
-      if (cancelled) return;
-      const vVals = vRes.data.values || [];
-      const iVals = iRes.data.values || [];
-      setAvgStats({
-        vAvg: vVals.length ? vVals.reduce((s, v) => s + v.value, 0) / vVals.length : null,
-        iAvg: iVals.length ? iVals.reduce((s, v) => s + v.value, 0) / iVals.length : null,
-      });
-    }).catch(() => { if (!cancelled) setAvgStats(null); });
-    return () => { cancelled = true; };
-  }, [selectedBankId, selectedBankInactive]);
+  // Promedios recibidos desde SimpleChart (evita fetch duplicado)
+  const [vAvg, setVAvg] = useState(null);
+  const [iAvg, setIAvg] = useState(null);
+  const onVAvg = useCallback((avg) => setVAvg(avg), []);
+  const onIAvg = useCallback((avg) => setIAvg(avg), []);
 
   return (
     <div className="p-4 lg:p-6">
@@ -559,8 +545,8 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
               {/* Stat cards */}
               <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 ${selectedBank.inactive ? 'opacity-60' : ''}`}>
                 {[
-                  { label: 'Voltaje actual', value: selectedBank.voltage, unit: 'V', icon: Zap, trend: avgStats?.vAvg != null ? selectedBank.voltage - avgStats.vAvg : undefined },
-                  { label: 'Corriente actual', value: selectedBank.current, unit: 'A', icon: Activity, trend: avgStats?.iAvg != null ? selectedBank.current - avgStats.iAvg : undefined },
+                  { label: 'Voltaje actual', value: selectedBank.voltage, unit: 'V', icon: Zap, trend: vAvg != null ? selectedBank.voltage - vAvg : undefined },
+                  { label: 'Corriente actual', value: selectedBank.current, unit: 'A', icon: Activity, trend: iAvg != null ? selectedBank.current - iAvg : undefined },
                   { label: 'Celdas operativas', value: `${selectedBank.chargeLevel}%`, unit: '', icon: BatteryCharging },
                   { label: 'Alertas activas', value: selectedBank.alarmCount, unit: '', icon: AlertTriangle },
                 ].map(m => (
@@ -587,8 +573,8 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
 
               {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                <SimpleChart bankId={selectedBank.id} varLabel={`banco${selectedBank.id}_v`} title="Voltaje" unit="V" color="#3b82f6" darkMode={darkMode} />
-                <SimpleChart bankId={selectedBank.id} varLabel={`banco${selectedBank.id}_i`} title="Corriente" unit="A" color="#10b981" darkMode={darkMode} />
+                <SimpleChart bankId={selectedBank.id} varLabel={`banco${selectedBank.id}_v`} title="Voltaje" unit="V" color="#3b82f6" darkMode={darkMode} onAvg={onVAvg} />
+                <SimpleChart bankId={selectedBank.id} varLabel={`banco${selectedBank.id}_i`} title="Corriente" unit="A" color="#10b981" darkMode={darkMode} onAvg={onIAvg} />
               </div>
 
             </>
