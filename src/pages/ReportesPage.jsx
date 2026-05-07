@@ -215,10 +215,11 @@ export default function ReportesPage({ darkMode }) {
   };
 
   const border = darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)';
+  const cardBg = darkMode ? '#0d1117' : '#ffffff';
   const thCls = `px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-left`;
   const tdCls = `px-3 py-2.5 text-[13px]`;
-  const theadBg = darkMode ? 'rgba(255,255,255,0.04)' : '#f8f9fb';
-  const zebraBg = darkMode ? 'rgba(255,255,255,0.015)' : 'rgba(0,0,0,0.015)';
+  const theadBg = darkMode ? 'rgba(59,130,246,0.06)' : 'rgba(59,130,246,0.04)';
+  const zebraBg = darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(59,130,246,0.02)';
 
   const activeBanksWithHistory = banks.filter(b => !b.inactive && history[b.id]);
 
@@ -275,8 +276,8 @@ export default function ReportesPage({ darkMode }) {
         <div className="space-y-5">
           {/* Report meta — compact bar */}
           <div
-            className={`flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1 px-3 py-2.5 text-[12px] ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}
-            style={{ border: `1px solid ${border}`, borderRadius: 8 }}
+            className={`flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1 px-3 py-2.5 text-[12px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}
+            style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: darkMode ? 'rgba(59,130,246,0.04)' : 'rgba(59,130,246,0.03)' }}
           >
             <span><span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{user?.name || '—'}</span> · {user?.email || '—'}</span>
             <span>Generado {new Date().toLocaleDateString('es-AR')}</span>
@@ -284,12 +285,12 @@ export default function ReportesPage({ darkMode }) {
           </div>
 
           {/* Banks — estado actual */}
-          <div style={{ border: `1px solid ${border}`, borderRadius: 8 }} className="overflow-hidden">
+          <div style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }} className="overflow-hidden">
             <div
               className={`flex items-center justify-between px-3 py-2.5 text-[13px] font-semibold ${
-                darkMode ? 'text-gray-200 bg-white/[0.03]' : 'text-gray-700 bg-gray-50'
+                darkMode ? 'text-gray-200' : 'text-gray-700'
               }`}
-              style={{ borderBottom: `1px solid ${border}`, borderLeft: `3px solid ${darkMode ? '#3b82f6' : '#3b82f6'}` }}
+              style={{ borderBottom: `1px solid ${border}`, borderLeft: `3px solid #3b82f6` }}
             >
               <span>Estado actual de bancos</span>
               <span className={`text-[11px] font-normal tabular-nums ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>{banks.length} bancos</span>
@@ -374,10 +375,10 @@ export default function ReportesPage({ darkMode }) {
           </div>
 
           {/* History stats — per-bank breakdown */}
-          <div style={{ border: `1px solid ${border}`, borderRadius: 8 }} className="overflow-hidden">
+          <div style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }} className="overflow-hidden">
             <div
               className={`flex items-center justify-between px-3 py-2.5 text-[13px] font-semibold ${
-                darkMode ? 'text-gray-200 bg-white/[0.03]' : 'text-gray-700 bg-gray-50'
+                darkMode ? 'text-gray-200' : 'text-gray-700'
               }`}
               style={{ borderBottom: `1px solid ${border}`, borderLeft: `3px solid ${darkMode ? '#a78bfa' : '#7c3aed'}` }}
             >
@@ -491,10 +492,10 @@ export default function ReportesPage({ darkMode }) {
           </div>
 
           {/* Alarms — compact */}
-          <div style={{ border: `1px solid ${border}`, borderRadius: 8 }} className="overflow-hidden">
+          <div style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }} className="overflow-hidden">
             <div
               className={`flex items-center gap-2 px-3 py-2.5 text-[13px] font-semibold ${
-                darkMode ? 'text-gray-200 bg-white/[0.03]' : 'text-gray-700 bg-gray-50'
+                darkMode ? 'text-gray-200' : 'text-gray-700'
               }`}
               style={{ borderBottom: `1px solid ${border}`, borderLeft: `3px solid ${darkMode ? '#f59e0b' : '#d97706'}` }}
             >

@@ -96,6 +96,7 @@ export default function AlarmasPage({ darkMode }) {
   const filtered = filter === 'all' ? alarms : alarms.filter(a => a.banco === filter);
 
   const border = darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.08)';
+  const cardBg = darkMode ? '#0d1117' : '#ffffff';
 
   return (
     <div className="p-4 lg:p-5">
@@ -198,19 +199,19 @@ export default function AlarmasPage({ darkMode }) {
           <div className="animate-spin rounded-full h-7 w-7 border-t-2 border-b-2 border-blue-500" />
         </div>
       ) : alarms.length === 0 ? (
-        <div className="py-16 text-center" style={{ border: `1px solid ${border}`, borderRadius: 8 }}>
+        <div className="py-16 text-center" style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }}>
           <CheckCircle className={`w-6 h-6 mx-auto mb-2 ${darkMode ? 'text-emerald-500/50' : 'text-emerald-400/60'}`} />
           <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Sin alertas activas</p>
           <p className={`text-xs mt-1 ${darkMode ? 'text-gray-600' : 'text-gray-400'}`}>Todos los bancos operando normalmente</p>
         </div>
       ) : (
-        <div style={{ border: `1px solid ${border}`, borderRadius: 8 }} className="overflow-hidden">
+        <div style={{ border: `1px solid ${border}`, borderRadius: 8, backgroundColor: cardBg }} className="overflow-hidden">
           {/* Desktop table header */}
           <div
-            className={`hidden sm:grid grid-cols-[6px_1fr_80px_72px_72px_96px] gap-x-3 items-center px-3 py-2 text-[11px] font-medium uppercase tracking-wider ${
-              darkMode ? 'text-gray-600 bg-white/[0.02]' : 'text-gray-400 bg-gray-50/50'
+            className={`hidden sm:grid grid-cols-[6px_1fr_80px_72px_72px_96px] gap-x-3 items-center px-3 py-2 text-[11px] font-semibold uppercase tracking-wider ${
+              darkMode ? 'text-gray-400' : 'text-gray-500'
             }`}
-            style={{ borderBottom: `1px solid ${border}` }}
+            style={{ backgroundColor: darkMode ? 'rgba(59,130,246,0.06)' : 'rgba(59,130,246,0.04)', borderBottom: `1px solid ${border}` }}
           >
             <span />
             <span>Descripción</span>
