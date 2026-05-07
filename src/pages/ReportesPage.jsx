@@ -283,11 +283,12 @@ export default function ReportesPage({ darkMode }) {
     <div className="p-4 lg:p-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3">
-          <h1 className={`text-base font-semibold tracking-tight ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-            Reportes
-          </h1>
-          {/* Period toggle — inline */}
+        <h1 className={`text-base font-semibold tracking-tight ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+          Reportes
+        </h1>
+
+        <div className="flex items-center gap-2">
+          {/* Period toggle */}
           <div className="flex items-center" style={{ borderRadius: 6, border: `1px solid ${border}`, backgroundColor: cardBg }}>
             {PERIOD_OPTIONS.map((p, i) => (
               <button
@@ -308,21 +309,21 @@ export default function ReportesPage({ darkMode }) {
               </button>
             ))}
           </div>
-        </div>
 
-        <button
-          onClick={downloadCSV}
-          disabled={loading}
-          className={`self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium transition-colors ${
-            darkMode
-              ? 'bg-white/[0.06] text-gray-300 hover:bg-white/[0.10]'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-          style={{ borderRadius: 6, border: `1px solid ${border}` }}
-        >
-          <Download className="w-3.5 h-3.5" />
-          Exportar CSV
-        </button>
+          <button
+            onClick={downloadCSV}
+            disabled={loading}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium transition-colors ${
+              darkMode
+                ? 'bg-white/[0.06] text-gray-300 hover:bg-white/[0.10]'
+                : 'bg-white text-gray-700 hover:bg-gray-50'
+            }`}
+            style={{ borderRadius: 6, border: `1px solid ${border}` }}
+          >
+            <Download className="w-3.5 h-3.5" />
+            Descargar reporte · {PERIOD_OPTIONS.find(p => p.key === period)?.label}
+          </button>
+        </div>
       </div>
 
       {loading ? (
