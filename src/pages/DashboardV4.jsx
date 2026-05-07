@@ -356,6 +356,12 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState(null);
 
+  // Refs para evitar re-renders por callbacks del parent
+  const setParentAlarmsRef = useRef(setParentAlarms);
+  const setParentTimestampRef = useRef(setParentTimestamp);
+  setParentAlarmsRef.current = setParentAlarms;
+  setParentTimestampRef.current = setParentTimestamp;
+
   // Extraer valor de lastValue (puede ser objeto o número)
   const extractValue = (raw) => {
     if (raw == null) return 0;
@@ -454,8 +460,8 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
       });
 
       setBanks(newBanks);
-      setParentAlarms?.(newAlarms);
-      setParentTimestamp?.(mostRecentTimestamp);
+      setParentAlarmsRef.current?.(newAlarms);
+      setParentTimestampRef.current?.(mostRecentTimestamp);
     } catch (err) {
       console.error('Error fetching variables:', err);
       setDataError(err.response?.data?.error || err.message);
@@ -474,23 +480,28 @@ const DashboardV4 = ({ darkMode, setAlarms: setParentAlarms, setLastDataTimestam
 
   // Fetch promedios del banco seleccionado para trend
   const [avgStats, setAvgStats] = useState(null);
+  const selectedBankId = selectedBank?.id;
+  const selectedBankInactive = selectedBank?.inactive;
   useEffect(() => {
     setAvgStats(null);
-    if (!selectedBank || selectedBank.inactive) return;
+    if (!selectedBankId || selectedBankInactive) return;
+    let cancelled = false;
     const now = Date.now();
     const start = now - 86400000;
     Promise.all([
-      api.get(`/devices/mine/variables/banco${selectedBank.id}_v/values`, { params: { start, end: now, limit: 500 } }),
-      api.get(`/devices/mine/variables/banco${selectedBank.id}_i/values`, { params: { start, end: now, limit: 500 } }),
+      api.get(`/devices/mine/variables/banco${selectedBankId}_v/values`, { params: { start, end: now, limit: 500 } }),
+      api.get(`/devices/mine/variables/banco${selectedBankId}_i/values`, { params: { start, end: now, limit: 500 } }),
     ]).then(([vRes, iRes]) => {
+      if (cancelled) return;
       const vVals = vRes.data.values || [];
       const iVals = iRes.data.values || [];
       setAvgStats({
         vAvg: vVals.length ? vVals.reduce((s, v) => s + v.value, 0) / vVals.length : null,
         iAvg: iVals.length ? iVals.reduce((s, v) => s + v.value, 0) / iVals.length : null,
       });
-    }).catch(() => setAvgStats(null));
-  }, [selectedBank?.id, selectedBank?.inactive]);
+    }).catch(() => { if (!cancelled) setAvgStats(null); });
+    return () => { cancelled = true; };
+  }, [selectedBankId, selectedBankInactive]);
 
   return (
     <div className="p-4 lg:p-6">

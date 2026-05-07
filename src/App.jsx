@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@core/contexts/AuthContext';
 import ProtectedRoute from '@core/routes/ProtectedRoute';
@@ -76,7 +76,7 @@ export default function App() {
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
-  const getRelativeTime = (timestamp) => {
+  const getRelativeTime = useCallback((timestamp) => {
     const diff = Date.now() - timestamp;
     const mins = Math.floor(diff / 60000);
     if (mins < 1) return 'menos de 1 min';
@@ -88,7 +88,7 @@ export default function App() {
     const days = Math.floor(hours / 24);
     if (days === 1) return '1 día';
     return `${days} días`;
-  };
+  }, []);
 
   if (loading) {
     return (
